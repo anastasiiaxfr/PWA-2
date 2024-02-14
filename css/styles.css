@@ -1,0 +1,131 @@
+:root {
+  --primary: #6200ea;
+  --text: #8c8c8c;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+*::selection {
+  background-color: var(--primary);
+  color: #fff;
+}
+
+/* BEGIN card */
+.cards {
+  margin: 24px auto;
+}
+.card-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+}
+
+.card-image > * {
+  max-width: 80%;
+  object-fit: contain;
+}
+
+.card .card-content .card-title {
+  margin-bottom: 0;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.card .card-content {
+  padding: 0 24px 12px;
+}
+
+.card-action {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 8px;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 10px;
+}
+
+.card-action .btn {
+  width: 100%;
+}
+/* END card */
+
+/* BRGIN footer */
+.page-footer {
+  padding: 0;
+  text-align: center;
+  font-size: 12px;
+}
+/* END footer */
+
+/* BEGIN nav */
+.nav-wrapper > * {
+  color: inherit;
+}
+.nav-wrapper li a {
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+/* END nav */
+
+/* BEGIN typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+}
+h1 {
+  font-size: 36px;
+}
+h2,
+h3,
+h4 {
+  font-size: 30px;
+}
+
+h5,
+h6 {
+  font-size: 24px;
+}
+/* END typography */
+
+/* BEGIN pages */
+.page-single {
+  margin: 48px auto;
+  color: var(--text);
+}
+
+.page-single > *:first-child {
+  margin-top: 0;
+}
+
+.page-single h1,
+.page-single h2,
+.page-single h3,
+.page-single h4,
+.page-single h5,
+.page-single h6 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #000;
+}
+/* END pages */
+
+/* BEGIN from */
+.side-form .divider {
+  margin-bottom: 32px;
+}
+/* END from */
