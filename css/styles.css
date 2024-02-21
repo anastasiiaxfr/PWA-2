@@ -11,6 +11,12 @@ body {
 
 main {
   flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  width: 100%;
 }
 
 *::selection {
@@ -21,7 +27,30 @@ main {
 /* BEGIN card */
 .cards {
   margin: 24px auto;
+  flex: 1 1 auto;
+  height: 100%;
 }
+
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.cards-message {
+  display: none;
+}
+
+.cards-message > * {
+  font-size: 22px;
+}
+
+.d-block {
+  display: block;
+}
+
 .card-image {
   display: flex;
   justify-content: center;
