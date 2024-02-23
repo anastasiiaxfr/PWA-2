@@ -51,7 +51,7 @@ cards_actions.style.display = "none";
 
 const renderCard = (data, id) => {
   const card = `
-    <div class="col s12 m6 l3">
+    <div class="">
         <!-- card -->
         <section class="card sticky-action" id="${id}">
           <div class="card-image waves-effect waves-block waves-light">
@@ -90,10 +90,13 @@ let originalData = {};
 const cards_db = ref(db, "plants/");
 onValue(cards_db, (snapshot) => {
   const data = snapshot.val();
-  //console.log("data", data);
-  originalData = data;
+  originalData = data || {};
+  list = Object.values(originalData);
   preloader.style.display = "none";
   cards_actions.style.display = "block";
+
+  console.log("Original Data:", originalData);
+  console.log("List:", list);
 
   if (data) {
     list = Object.keys(data).map((id) => ({ id, ...data[id] }));
@@ -104,10 +107,35 @@ onValue(cards_db, (snapshot) => {
   } else {
     cards_message.classList.add("d-block");
   }
+
+  // Order By
+  const searchData = Object.values(originalData || {});
+  console.log("searchData", searchData);
+  const orderBy = document.querySelector("select");
+
+  orderBy.addEventListener("change", function() {
+    const orderByValue = orderBy.value;
+
+    if (Array.isArray(list)) {
+      const sortedData = list.slice();
+
+      if (orderByValue === "asc") {
+        sortedData.sort((a, b) => (a.name > b.name ? 1 : -1));
+      } else if (orderByValue === "desc") {
+        sortedData.sort((a, b) => (a.name < b.name ? 1 : -1));
+      }
+
+      console.log("After sorting - searchData:", sortedData);
+
+      updateUI(sortedData);
+    } else {
+      console.error("searchData is not an array:", list);
+    }
+  });
 });
 
 // Del card
-cards.addEventListener("click", function (event) {
+cards.addEventListener("click", function(event) {
   const deleteButton = event.target.closest(".card-action .btn-del");
   if (deleteButton) {
     let id = deleteButton.getAttribute("data-id");
@@ -142,7 +170,9 @@ cards.addEventListener("click", function (event) {
 
 // Get random Id
 function generateRandomId(prefix) {
-  const randomPart = Math.random().toString(36).substr(2, 8);
+  const randomPart = Math.random()
+    .toString(36)
+    .substr(2, 8);
   const timestamp = new Date().getTime();
   return `${randomPart}-${timestamp}`;
 }
@@ -150,7 +180,7 @@ function generateRandomId(prefix) {
 // Add card
 const form = document.querySelector(".add-card");
 
-form.addEventListener("submit", async function (e) {
+form.addEventListener("submit", async function(e) {
   e.preventDefault();
   e.stopPropagation();
 
@@ -187,7 +217,7 @@ function writeUserData(id, name, description, imageUrl) {
 }
 
 // Update card
-document.addEventListener("click", function (event) {
+document.addEventListener("click", function(event) {
   const editButton = event.target.closest(".btn-edit");
   if (editButton) {
     event.stopPropagation();
@@ -216,7 +246,7 @@ async function formSubmitHandler(e, id) {
   const img = form_edit.edit_img.files[0];
   const imageUrl = await getImageUrl(img);
 
-  if (name.length > 0 && description.length > 0) {
+  if ((name.length > 0 || description.length > 0) && img != undefined) {
     updateUserData(id, name, description, imageUrl);
     form_edit.reset();
   }
@@ -231,7 +261,7 @@ function updateCard(id) {
   form_edit.removeEventListener("submit", previousFormSubmitHandler);
 
   // Create a new closure with the current id
-  const currentFormSubmitHandler = function (e) {
+  const currentFormSubmitHandler = function(e) {
     formSubmitHandler(e, id);
   };
 
@@ -242,33 +272,42 @@ function updateCard(id) {
   previousFormSubmitHandler = currentFormSubmitHandler;
 }
 
+function updateUI(data) {
+  cards.innerHTML = "";
+  data.forEach((item) => {
+    renderCard(item, item.id);
+  });
+}
+
 // Search
 const searchForm = document.querySelector(".search_form");
-searchForm.addEventListener("submit", function (e) {
+searchForm.addEventListener("submit", function(e) {
   e.preventDefault();
   e.stopPropagation();
 
   const searchInput = searchForm.querySelector("input").value.trim();
 
   if (searchInput === "") {
-    // If search input is empty, render all cards
     renderAllCards();
   } else {
-    // Perform the search
     const options = {
       includeScore: true,
-      keys: ["name", "description"],
+      keys: ["name"],
     };
     const fuse = new Fuse(list, options);
     const results = fuse.search(searchInput);
 
-    // Update your UI based on the search results
     renderSearchResults(results);
   }
 });
 
+// Add a separate event listener for the reset button
+searchForm.addEventListener("reset", function() {
+  renderAllCards();
+});
+
 function renderAllCards() {
-  cards.innerHTML = ""; // Clear existing cards
+  cards.innerHTML = "";
 
   if (Object.keys(originalData).length > 0) {
     Object.keys(originalData).forEach((id) => {
@@ -281,7 +320,7 @@ function renderAllCards() {
 }
 
 function renderSearchResults(results) {
-  cards.innerHTML = ""; // Clear existing cards
+  cards.innerHTML = "";
 
   if (!results || results.length === 0) {
     cards_message.classList.add("d-block");

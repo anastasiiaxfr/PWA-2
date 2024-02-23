@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <!-- JS -->
     <script type="text/javascript" src="/js/materialize.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+    <script src="/js/fuse.js@7.0.0.js"></script>
 
     <!-- BEGIN SEO -->
     <title>PWA-2 Plants</title>
@@ -137,22 +137,11 @@
       <!-- END Nav -->
     </header>
     <main>
-      <!-- BEGIN msg -->
-      <section class="container">
-        <div class="center preloader">
-          <h1>Loading...</h1>
-        </div>
-        <div class="center cards-message">
-          <h2>Nothing added, please add some!</h2>
-        </div>
-      </section>
-      <!-- END msg -->
-
       <section class="container cards-action">
         <div class="row">
           <div class="input-field col s12 m3">
             <!-- BEGIN orderBy -->
-            <select>
+            <select id="orderBy">
               <option value="" disabled selected>Order By</option>
               <option value="asc">ASC</option>
               <option value="desc">DESC</option>
@@ -172,6 +161,9 @@
                 >
                   search
                 </button>
+                <button class="search_btn btn waves-effect waves-light deep-purple accent-4" name="action" type="reset">
+                  clear
+                </button>
               </div>
             </form>
             <!-- END search -->
@@ -182,6 +174,16 @@
       <!-- BEGIN cards -->
       <article class="container cards">
         <div class="row"></div>
+      </article>
+
+      <!-- BEGIN msg -->
+      <section class="container cards-cta">
+        <div class="center preloader">
+          <h1>Loading...</h1>
+        </div>
+        <div class="center cards-message">
+          <h2>Nothing added, please add some!</h2>
+        </div>
 
         <!-- BEGIN add btn -->
         <div class="center">
@@ -193,7 +195,8 @@
           </button>
         </div>
         <!-- END add btn -->
-      </article>
+      </section>
+      <!-- END msg -->
 
       <!-- BEGIN sideform -->
       <div class="sidenav side-form" id="side-form">
