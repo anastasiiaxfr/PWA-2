@@ -16,6 +16,7 @@ const assets = [
   "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
   "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js",
   "https://pwa-plants-catalog-default-rtdb.firebaseio.com",
+  "https://cdn.jsdelivr.net/npm/fuse.js@7.0.0",
 ];
 
 // cache size limit function

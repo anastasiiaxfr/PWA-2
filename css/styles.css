@@ -85,6 +85,12 @@ main {
 .card-action .btn {
   width: 100%;
 }
+
+.cards-action {
+  display: none;
+  margin-top: 20px;
+  margin-bottom: 0;
+}
 /* END card */
 
 /* BRGIN footer */
@@ -129,6 +135,10 @@ h5,
 h6 {
   font-size: 24px;
 }
+
+.preloader h1 {
+  font-size: 22px;
+}
 /* END typography */
 
 /* BEGIN pages */
@@ -157,4 +167,9 @@ h6 {
 .side-form .divider {
   margin-bottom: 32px;
 }
-/* END from */
+
+/* Search */
+.search_btn.prefix {
+  width: auto;
+  font-size: initial;
+}

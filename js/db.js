@@ -39,9 +39,11 @@ const storage = getStorage();
 const cards_wrap = document.querySelector(".cards");
 const cards = document.querySelector(".cards > .row");
 const cards_message = document.querySelector(".cards-message");
+const cards_actions = document.querySelector(".cards-action");
 const preloader = document.querySelector(".preloader");
 
 preloader.style.display = "block";
+cards_actions.style.display = "none";
 
 // if (cards.children && cards.children.length === 0) {
 //   cards_message.classList.add("d-block");
@@ -76,17 +78,25 @@ const renderCard = (data, id) => {
 `;
   cards.innerHTML += card;
   cards_message.classList.remove("d-block");
+
   preloader.style.display = "none";
+  cards_actions.style.display = "block";
 };
 
 // Read cards
+let list = [];
+let originalData = {};
+
 const cards_db = ref(db, "plants/");
 onValue(cards_db, (snapshot) => {
   const data = snapshot.val();
   //console.log("data", data);
+  originalData = data;
   preloader.style.display = "none";
+  cards_actions.style.display = "block";
 
   if (data) {
+    list = Object.keys(data).map((id) => ({ id, ...data[id] }));
     cards.innerHTML = ""; // Clear existing cards
     Object.keys(data).forEach((id) => {
       renderCard(data[id], id);
@@ -114,6 +124,8 @@ cards.addEventListener("click", function (event) {
           cards.innerHTML = "";
           if (!newData || Object.keys(newData).length === 0) {
             preloader.style.display = "none";
+            cards_actions.style.display = "block";
+
             cards_message.classList.add("d-block");
           } else {
             Object.keys(newData).forEach((newId) => {
@@ -228,4 +240,55 @@ function updateCard(id) {
 
   // Store the current event listener for removal later
   previousFormSubmitHandler = currentFormSubmitHandler;
+}
+
+// Search
+const searchForm = document.querySelector(".search_form");
+searchForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+  e.stopPropagation();
+
+  const searchInput = searchForm.querySelector("input").value.trim();
+
+  if (searchInput === "") {
+    // If search input is empty, render all cards
+    renderAllCards();
+  } else {
+    // Perform the search
+    const options = {
+      includeScore: true,
+      keys: ["name", "description"],
+    };
+    const fuse = new Fuse(list, options);
+    const results = fuse.search(searchInput);
+
+    // Update your UI based on the search results
+    renderSearchResults(results);
+  }
+});
+
+function renderAllCards() {
+  cards.innerHTML = ""; // Clear existing cards
+
+  if (Object.keys(originalData).length > 0) {
+    Object.keys(originalData).forEach((id) => {
+      renderCard(originalData[id], id);
+    });
+    cards_message.classList.remove("d-block");
+  } else {
+    cards_message.classList.add("d-block");
+  }
+}
+
+function renderSearchResults(results) {
+  cards.innerHTML = ""; // Clear existing cards
+
+  if (!results || results.length === 0) {
+    cards_message.classList.add("d-block");
+  } else {
+    results.forEach(({ item }) => {
+      renderCard(item, item.id);
+    });
+    cards_message.classList.remove("d-block");
+  }
 }

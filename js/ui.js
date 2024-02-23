@@ -10,6 +10,11 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  var modals = document.querySelectorAll(".modal");
+  const modals = document.querySelectorAll(".modal");
   M.Modal.init(modals, {});
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const elems = document.querySelectorAll("select");
+  M.FormSelect.init(elems, {});
 });
